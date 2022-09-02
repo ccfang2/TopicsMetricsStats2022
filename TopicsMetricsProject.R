@@ -158,5 +158,5 @@ Sys.time()
 sim_m4 <- lapply(1:2, function(x) sim(n=100,m=m4,j=x))
 Sys.time()
 sim_m5 <- lapply(1:2, function(x) sim(n=100,m=m5,j=x))
-
+Sys.time()
 
