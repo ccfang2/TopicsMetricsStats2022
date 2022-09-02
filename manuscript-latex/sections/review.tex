@@ -1,0 +1,55 @@
+\section{Review}
+\label{sec:review}
+
+The newly proposed model of multilayer feed-forward neural networks in \cite{Bauer2019} is built on a generalized hierarchical interaction model with neural networks as a technique to approximate regression functions. 
+
+\subsection{Generalized Hierarchical Interaction Model}
+
+The generalized hierarchical interaction model is analogous to complex technical system in terms of modularity. \cite{Kohler2017} gives its mathematical definition, as shown in Definition \ref{def1}.
+
+\begin{definition}
+Let $d \in \mathbb{N}$, $d^* \in \{1,\ldots,d\}$ and $m:\mathbb{R}^d \rightarrow \mathbb{R}$.
+\begin{enumerate}[(a)]
+    \item We say that $m$ satisfies a generalized hierarchical interaction model of order $d^*$ and level 0, if there exist $a_1,\ldots,a_{d^*} \in \mathbb{R}^d$ and $f:\mathbb{R}^{d^*}\rightarrow \mathbb{R}$ such that for all $x \in \mathbb{R}^d$, 
+    \[ m(X)=f(a_1^TX,\cdots,a_{d^*}^TX) \]
+    \item We say that $m$ satisfies a generalized hierarchical interaction model of order $d^*$ and level $l+1$, if there exists $K\in \mathbb{N}$, $g_k:\mathbb{R}^{d^*} \rightarrow \mathbb{R}(k=1,\cdots,K)$ and $f_{1,k},\cdots,f_{d^*,k}: \mathbb{R}^d \rightarrow \mathbb{R} (k=1,\cdots,K)$ such that $f_{1,k},\cdots,f_{d^*,k} (k=1,\cdots,K)$ satisfy a generalized hierarchical interaction model of order $d^*$ and level $l$, and for all $X \in \mathbb{R}^d$,
+    \[ m(X)=\sum_{k=1}^{K}g_k(f_{1,k}(X),\cdots,f_{d^*,k}(X))\]
+    \item We say that the generalized hierarchical interaction model defined above is $(p,C)$-smooth, if all functions occurring in its definition are $(p,C)$-smooth according to Definition \ref{def1}.
+\end{enumerate}
+\label{def1}
+\end{definition}
+
+In compliance with Definition \ref{def1}, the aforementioned single index model belongs to generalized hierarchical interaction models with order 1 and level 0, while additive model and projection pursuit have order 1 and level 1. Now, it comes to the question of how to estimate those functions in the model?
+
+\subsection{Multilayer Feedforward Neural Network}
+
+The application of neural networks in high dimensional case becomes increasingly popular in recent years. \cite{Bauer2019} propose to use neural networks to estimate regression functions in the above-mentioned generalized hierarchical interaction models. But, what about the rate of convergence in such models?
+
+Existing literature on neural network regression estimates has extensively studied their rates of convergence. In respect of single hidden layer neural network, \cite{Barron1994} shows that its $L_2$ error has a dimensionless rate of $n^{-1/2}$ (up to some logarithmic factor), provided the Fourier transform has a finite first moment. \cite{McCaffrey1994} prove that the $L_2$ error has a rate of $n^{-\frac{2p}{2p+d+5}+\epsilon}$ when the single hidden layer neural network estimate for $(p,C)$-smooth functions is suitably defined. In terms of two- or multi-layer neural networks, \cite{Kohler2005} find that suitable two layer neural network estimates can achieve a rate of $n^{-\frac{2p}{2p+d^*}}$ (up to some logarithmic factor) for $(p,C)$-smooth interaction models with $p \le 1$, so the convergence rate is associated with $d^*$, the order of model, instead of $d$, the dimension of input. In \cite{Kohler2017}, the finding is further extended to suitably defined multi-layer neural networks, but the condition of $p \le 1$ is still imposed.
+
+A main contribution in \cite{Bauer2019} is that they design sets of multilayer feedforward neural networks according to generalized hierarchical interaction models, and define regression estimates as least squares estimates based on this class of neural networks. In their neural networks, they relax the condition of $p$ and allow it to be larger than 1 while maintaining a $d$-irrelevant rate of $n^{-\frac{2p}{2p+d^*}}$ (up to some logarithmic factor). With this less stringent condition, one can utilize $p$, the degree of smoothness, to speed up convergence. The precise definition of multilayer feedforward neural networks is given in Definition \ref{def2} as follows.
+
+\begin{definition}
+Let $K$, $d^*$, $d$ and $l$ has the same meaning as those in Definition \ref{def1}, and let $M^*$ be a parameter introduced for technical reasons and originating from the composition of several smaller networks in proof of that paper. It controls the accuracy of approximation. 
+
+\begin{enumerate}[(a)]
+    \item For $M^* \in \mathbb{N}$, $d \in \mathbb{N}$, $d^* \in \{1,\ldots, d\}$ and $\alpha >0$, we denote the set of all functions $f: \mathbb{R}^d \rightarrow \mathbb{R}$ that satisfy:
+    \[f(X) = \sum_{i=1}^{M^*}\mu_i \cdot \sigma \left( \sum_{j=1}^{4d^*} \lambda_{i,j}\cdot \sigma\left(\sum_{v=1}^{d} \theta_{i,j,v}\cdot X^{(v)} +\theta_{i,j,0}\right) +\lambda_{i,0} \right)+\mu_0\]
+    $(X \in \mathbb{R}^d)$ for some $\mu_{i}$, $\lambda_{i,j}$ and $\theta_{i,j,v} \in \mathbb{R}$, where $|\mu_i|\le\alpha$, $|\lambda_{i,j}|\le\alpha$ and $|\theta_{i,j,v}|\le\alpha$ for all $i \in \{0,1,\ldots, M^*\}$, $i \in \{0,\ldots,4d^*\}$, $v \in \{0,\ldots,d\}$, by $\mathcal{F}_{M^*,d^*,d,\alpha}^{(\textsf{neural networks})}$.
+    \item For $l=0$,we define our space of hierarchical neural networks by \[\mathcal{H}^{(0)}=\mathcal{F}_{M^*,d^*,d,\alpha}^{(\textsf{neural networks})}\]
+    For $l>0$, we define recursively \[ \mathcal{H}^{(l)}=\left\{h:\mathbb{R}^d \rightarrow \mathbb{R}: h(X)=\sum_{k=1}^K g_k(f_{1,k}(X),\ldots,f_{d^*,k}(X))\right\}\] 
+    for some $g_k \in \mathcal{F}_{M^*,d^*,d^*,\alpha}^{(\textsf{neural networks})}$ and $f_{j,k} \in \mathcal{H}^{(l-1)}$
+    \item We define $\tilde{m}_n$ as the least squares estimate \[\tilde{m}_n(\cdot)=\arg\min_{h\in\mathcal{H}^{(l)}}\frac{1}{n}\sum_{i=1}^n|Y_i-h(X_i)|^2\]
+\end{enumerate}
+\label{def2}
+\end{definition}
+
+As per Definition \ref{def2}, components of a function from $\mathcal{H}^{(l)}$ is illustrated in Figure \ref{fig1}. Moreover, an example of multilayer feedforward neural network with $l=1$,$K=2$,$d=7$,$d^*=2$ and $M^*=2$ is displayed in Figure \ref{fig2}. It can be seen that this class of neural networks is sparsely connected, as contrast to fully connected neural networks in existent literature. This better reflects the modularity of systems which is prevalent in real world. Also, with less weights, the estimation of sparse networks can be more efficient. Although the number of weights can still be very large with increasing number of layers, it can be contained because a typical example of technical systems usually have a moderate finite $l$. The major result of such neural networks that \cite{Bauer2019} find is in Theorem \ref{theorem1}.
+
+\begin{theorem}
+Let $(X,Y), (X_1, Y_1),\ldots, (X_n,Y_n)$ be iid random variables with values in $\mathbb{R}^d \times \mathbb{R}$ such that supp$(X)$ is bounded and \[\mathbf{E} \quad exp(c_1 \cdot Y^2)<\infty\] for some constant $c_1>0$.Let $m$ be the corresponding regression function satisfying a $(p,C)$-smooth generalized hierarchical interaction model of order $d^*$ and finite level $l$ with $p=q+s$ for some $q\in \mathbb{N}_0$ and $s \in (0,1]$. Let $N\in\mathbb{N}_0$ with $N\ge q$. Furthermore, assume that in Definition \ref{def1}(b) all partial derivatives of order less than or equal to $q$ of the functions $g_k$,$f_{j,k}$ are bounded, that is, assume that each such function $f$ satisfies \[\max_{j_1,\ldots,j_d\in\{0,1,\ldots,q\},\\ j_1+\ldots,+j_d\le q} \| \frac{\partial^{j_1+\ldots,+j_d}f}{\partial^{j_1}x^{(1)}\cdots \partial^{j_d}x^{(d)}}\| \le c_2\]
+and let all functions $g_k$ be Lipschitz continuous with Lipschitz constant $L>0$ [which follows from if $q>0$]. Let $\mathcal{H}^{(l)}$ be defined with $K,d,d^*$ as in Definition \ref{def2}, $M^*=\lceil c_{56}\cdot n^{\frac{d^*}{2p+d^*}}\rceil, \alpha=n^{c_{57}}$ for sufficiently large constants $c_{56},c_{57}>0$ and using an N-admissible $\sigma:\mathbb{R} \rightarrow [0,1]$. Let $\tilde{m_n}$ be least squares estimate and $m_n=T_{c_3 \cdot log(n)}\tilde{m_n}$. Then, \[\mathbf{E}\int|m_n(x)-m(x)|^2\mathbf{P}_X(dx)\le c_4 \cdot log(n)^3 \cdot n^{-\frac{2p}{2p+d^*}}\] holds for sufficiently large n.
+\label{theorem1}
+\end{theorem}
+
+As shown in Theorem \ref{theorem1}, for multilayer feedforward neural networks, the $L_2$ error has a rate of convergence at $n^{-\frac{2p}{2p+d^*}}$ up to some logarithmic factor. The rate is not related to $d$, the dimension of input, but $d^*$ of input components. Also, $p\ge 1$, which greatly relaxes the strict condition in previous neural network models. With this relaxed condition, one can fully utilize $p$, the degree of smoothness, to expedite convergence. One noteworthy drawback is that some parameters (e.g., $l$, $K$ or $d^*$) of the estimate $m_n$ is unknown, so the choice of them is data-dependent and can be very time consuming.

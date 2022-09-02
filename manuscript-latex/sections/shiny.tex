@@ -1,0 +1,18 @@
+\section{Shiny App in R}
+\label{sec:shiny}
+
+In this section, I design an R shiny app to interactively visualize the prediction power of multilayer feedforward neural network and other alternative models. The server logic of this app is almost the same as that in Section \ref{sec:simulation}. However, to expedite the reaction of my app, I only run a single simulation each time a set of parameters are given, instead of running multiple simulations and calculating the average. Sample size of test dataset is also decreased to 200. My web app is designed in \href{https://shiny.rstudio.com}{Shiny RStudio} and can be simply accessed by clicking this \href{https://ccfang2.shinyapps.io/neuralxSim/}{link}\footnote{This app is invalidated every 25 hours. Hence, if you could not open this link, please go to my \href{https://github.com/ccfang2/TopicsMetricsStats2022}{GitHub} for further instructions.}.
+
+Figure \ref{fig3} displays the layout of my Shiny app. This app needs to be bundled with this essay since terminologies or models are not explained in detail on the webpage, but all can be traced in this essay. The usage is summarized as follows.
+
+\begin{enumerate}[(a)]
+    \item Select a function for generating data. I only consider $m_1$, $m_2$, $m_4$ and $m_5$, the same as in Section \ref{sec:simulation}. The default function is $m_4$.
+    \item Select the degree of noise disturbance in data generation, i.e., $\sigma=5\%$ or $20\%$. The default is $5\%$.
+    \item Select all models you want to build and compare with each other. I exclude interpolation method of radial basis function because there is something wrong in my code which I fail to debug for now. The default model is simple nearest neighbor estimate.
+    \item Click the button "Run", and then three plots will pop out, which helps us to compare between different models. It is noteworthy that one may need to wait a few minutes for the output to come when $m_1$ and $m_2$ are selected.
+    \item Click the button "Run" again to observe another simulation result with the same given inputs.
+    \item Re-select a function, degree of noise disturbance or models to observe simulation result with different inputs.
+    \item Refresh the web page to reset this app.
+\end{enumerate}
+
+Figure \ref{fig4} presents an example of output plots with $m_1$, $5\%$ and all four models. There are three subplots, each of which explains the prediction accuracy from a distinct angle. The top subplot depicts the prediction errors of models, from which I can generally recognize that the neural network with one hidden layer and the multilayer feedforward neural network perform better than the other two. The bottom left subplot is a bar plot showing the scaled empirical $L_2$ error of each model, from which I clearly know the new approach predicts the most accurately and simple nearest neighbor model is the worst. Finally, the bottom right subplot is a correlation matrix plot, which visualizes the correlation between true target value in test dataset and predicted value of each model. All correlations are positive, and the size of circle indicates the strength of correlation. Again, it is obvious the correlation reaches the highest when the new approach is concerned.
