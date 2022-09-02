@@ -1,0 +1,52 @@
+\section{Simulation}
+\label{sec:simulation}
+
+In this section, I use Monte-Carlo simulation to test if the newly proposed model in \cite{Bauer2019} performs better than alternative models in varying cases. My setup here is almost the same as that of original paper, but simpler. I will not reiterate all details of my setup but only mention the differences from that of original paper.
+
+\begin{enumerate}[(a)]
+    \item I don't use all functions that they use for data generation. Since $m_1$, $m_2$ and $m_3$ all represent ordinary general hierarchical interaction models, I use $m_1$ and $m_2$ as an examples. I also include $m_4$ and $m_5$ to analyze the conditions of $d^*=1$ and $d^*=d$, respectively.
+    \item In terms of prediction models, I only concern with simple nearest neighbor estimate (\textit{neighbor/knn}), interpolation with radical basis function (\textit{RBF}), fully connected neural network with one hidden layer (\textit{neural-1}) and multilayer feedforward neural networks defined in Definition \ref{def2} (\textit{neural-x}). I abandon \textit{neural-3} and \textit{neural-6} for consideration of time efficiency because I use R programming which is not very machine learning friendly. But I add a random forest model (\textit{rf/random forest}) as an alternative.
+    \item For the parameter $k_n$ in simple nearest neighbor estimate, I don't adaptively select it from a set of values, and instead choose the value of 4 discretionarily. Otherwise, it would take too much time to run the whole batch of codes in R.
+    \item Again for consideration of time efficiency, I reduce the sample size of test data from $100000$ to $500$, and also scale down the repeating times of simulation from $50$ to $10$.
+    \item I also simulate a simpler version of multilayer feedforward neural networks, which is clarified and explained later.
+\end{enumerate}
+
+Before proceeding to simulating the multilayer feedforward neural networks, I summarize Algorithm \ref{alg1} as follows, with reference to Definition \ref{def2} and simulation setup in \cite{Bauer2019}.
+
+\begin{tcolorbox}[standard jigsaw, opacityback=0]
+\begin{algorithm}[H]
+\caption{Multilayer feedforward neural networks}
+\label{alg1}
+\begin{algorithmic}[1]
+\State define $d$ as the dimension of input
+\For {each $d^*$ in $\{1,\ldots,d\}$}
+\For {each $M^*$ in $\{1,\ldots,5,6,11,16,21,\ldots,46\}$}
+\State construct neural networks with $d^*$, $M^*$ and $l=0$:$\mathcal{H}^{(0)}$
+\State estimate $L_2$ error of neural network with $d^*$, $M^*$ and $l=0$
+\For {each $l$ in $\{1,2\}$}
+\For {each $K$ in $\{1,\ldots,5\}$}
+\State construct neural networks with $d^*$, $M^*$, $l=1$ or $2$ and $K$: $\mathcal{H}^{(l)}$
+\State estimate $L_2$ error of neural network with $d^*$, $M^*$, $l$ and $K$
+\EndFor
+\EndFor
+\EndFor
+\EndFor
+\State find the minimum $L_2$ error and the corresponding neural network
+\end{algorithmic}
+\end{algorithm}
+\end{tcolorbox}
+
+I make much attempt to code this algorithm in R, but there are so many large neural networks to run and R programming is not very efficient in estimating neural networks. So, I decide to just estimate neural network with $l=0$, in a hope that if neural network with $l=0$ performs well, the multilayer feedforward neural networks selected by Algorithm \ref{alg1} can only function better. Table \ref{table1} presents my Monte-Carlo simulation \footnote{If one gets a warning \textit{Algorithm did not converge in 1 of 1 repetition(s) within the stepmax} when running my code, please increase the value of parameter \textit{stepmax} or adjust parameter \textit{threshold} in function \textit{neuralnet}} result, and it corroborates the findings in \cite{Bauer2019}.
+
+\begin{enumerate}[(a)]
+\item In cases of $m_1$ and $m_2$, i.e., ordinary hierarchical interaction model, and when disturbance of noise is weak, i.e., $\sigma=5\%$, the new approach has the smallest scaled empirical $L_2$ error among all models concerned. Moreover, I only use neural network with $l=0$ in simulation for consideration of time, so neural network sorted out by Algorithm \ref{alg1} can perform even better. When disturbance of noise is strong, i.e., $\sigma=20\%$, the performance of new approach ranks the second, and can still be considered as decent. There is a high chance that the new approach can be the best if I successfully implement Algorithm \ref{alg1}.
+
+\item In case of $m_4$, i.e., additive model with $d^*=1$ and $m_5$, i.e., interaction model with $d^*=d$, and when noise is weak, the new approach performs the second best and the best, separately. Moreover, when noise is strong, even though it fails to be the best, it still functions well enough, giving out a relatively small scaled empirical $L_2$ error. Our finding is consistent with \cite{Bauer2019}.
+\end{enumerate}
+
+Besides, I have also witness two other interesting new facts from my simulation. 
+
+\begin{enumerate}[(a)]
+\item I record the time duration consumed in simulation for each case, and I find out it takes much more time to run simulation for $m_1$ and $m_2$ (more than 1 hour), while it is way faster to run codes for $m_4$ and $m_5$ (less than 1 minute). In case of $m_4$, because $d^*=1$, then rate of convergence $n^{-\frac{2p}{2p+d^*}}$ can be very high, and the algorithm converges speedily. In case of $m_5$, an exponential function, despite the fact that $d^*=d$, the degree of smoothness, $p$, can be fully taken advantage of to speed up convergence. 
+\item I also discover that when the disturbance of noise in data generation process increase from $5\%$ to $20\%$, the scaled empirical $L_2$ error grows. This might be due to the fact that with more noise, the property of modularity imbedded in data structure is impaired more, and the prediction power of the new approach is thus weakened.
+\end{enumerate}
