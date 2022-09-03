@@ -2,14 +2,14 @@
 
 *Bonn Graduate School of Economics, University of Bonn*
 
-> This repository includes all materials needed for my project in the lecture *Topics in Econometrics and Statistics* I took at summer term 2022.
+> This repository includes all materials needed for my project at the lecture *Topics in Econometrics and Statistics* I took at summer term 2022.
 ------
 
 ## Files
 
 | |PDF file| Compiling file|
 |:-:|:-:|:-:|
-|1 |presentation slides| presentation-Emd|
+|1 |presentation slides| presentation-Rmd|
 |2 | manuscript | manuscript-latex|
 
 ## Monte-Carlo simulation
@@ -19,8 +19,8 @@
 ## Shiny R App
 
 - Click [link](https://ccfang2.shinyapps.io/neuralxSim/) to open. 
-- However, this link is invalidated every 25 hours, so if it doesn't respond, then run *app.R* in folder *neuralxSim* to open the app. It is noteworthy that you need to install and import package *shiny* to make *app.R* work.
-- Usage of this app is clarified in manuscript.
+- :exclamation: This link is invalidated every 25 hours, so if it doesn't respond, then run *app.R* in folder *neuralxSim* to open the app. It is noteworthy that you need to install and import package [*shiny*](https://shiny.rstudio.com) to make *app.R* work.
+- Usage of this app is clarified in the manuscript.
 
 ## Others
 
